@@ -8,6 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 //自动导入ui-组件 比如说ant-design-vue  element-plus等
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import UnoCSS from 'unocss/vite'
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   // 根据当前工作目录中的 `mode` 加载 .env 文件
@@ -22,7 +23,8 @@ export default defineConfig(({ command, mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       vue(),
-			VueSetupExtend()
+      VueSetupExtend(),
+      UnoCSS(),
     ],
     // vite 配置
     define: {

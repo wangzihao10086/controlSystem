@@ -35,7 +35,22 @@
       <div class="login-btn">
         <el-button type="primary" @click="submitForm(login)">登录</el-button>
       </div>
+      <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
     </div>
+  
+   
+      <el-dialog
+      v-model="recordDialogVisible"
+      title="备案查询"
+      width="50%"
+      align-center
+      @close="recordDialogVisible = false"
+    >
+     <div class="record-search">
+          <el-input class="record-search-input"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
+          <el-button type="primary" class="bg-[red]">Primary</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,6 +59,10 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
+/** 备案号 */
+const recordNum = ref('')
+/** 备案查询对话框显隐 */
+const recordDialogVisible = ref(false)
 
 interface LoginInfo {
   username: string;
@@ -138,5 +157,14 @@ const submitForm = (formEl: FormInstance | undefined) => {
       margin-top: 20px;
     }
   }
+}
+//备案号查询相关样式
+.record-search{
+  display: flex;
+  align-items: center;
+  .record-search-input {
+  width: 300px;
+  margin: 20px 0;
+}
 }
 </style>
