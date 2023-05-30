@@ -14,7 +14,17 @@ const routes: RouteRecordRaw[] = [
       roles: ['admin', 'user'],
       title: 'adminAndUser',
     },
-    component: () => import('@/views/login.vue'),
+    component: () => import('@/views/login/login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      requiresAuth: true,
+      roles: ['admin', 'user'],
+      title: 'adminAndUser',
+    },
+    component: () => import('@/views/login/register.vue'),
   },
   {
     path: '/',
