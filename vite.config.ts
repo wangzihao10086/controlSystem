@@ -1,22 +1,37 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import VueSetupExtend from 'vite-plugin-vue-setup-extend';
-import AutoImport from 'unplugin-auto-import/vite';
-import Components from 'unplugin-vue-components/vite';
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
-export default defineConfig({
-	base: './',
-	plugins: [
-		vue(),
-		VueSetupExtend(),
-		AutoImport({
-			resolvers: [ElementPlusResolver()]
-		}),
-		Components({
-			resolvers: [ElementPlusResolver()]
-		})
-	],
-	optimizeDeps: {
-		include: ['schart.js']
-	}
-});
+
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
+import { defineConfig, loadEnv } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
+// 自动导入vue中hook reactive ref等
+import AutoImport from 'unplugin-auto-import/vite'
+//自动导入ui-组件 比如说ant-design-vue  element-plus等
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// https://vitejs.dev/config/
+export default defineConfig(({ command, mode }) => {
+  // 根据当前工作目录中的 `mode` 加载 .env 文件
+  // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
+  const env = loadEnv(mode, process.cwd(), '')
+  return {
+    plugins: [
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+      vue(),
+			VueSetupExtend()
+    ],
+    // vite 配置
+    define: {
+      __APP_ENV__: env.APP_ENV,
+    },
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src'),
+      },
+    },
+  }
+})
