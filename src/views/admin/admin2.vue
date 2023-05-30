@@ -1,6 +1,6 @@
 <template>
     <div>
-      login
+      admin2
     </div>
 </template>
   
