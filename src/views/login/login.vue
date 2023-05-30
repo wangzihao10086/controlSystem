@@ -29,7 +29,7 @@
           </el-input>
         </el-form-item>
       </el-form>
-      <el-button type="text" class="btn-register" @click="register"
+      <el-button text class="btn-register" @click="register"
         >注册账号</el-button
       >
       <div class="login-btn">
@@ -44,8 +44,6 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
-
-const register = () => {};
 
 interface LoginInfo {
   username: string;
@@ -67,6 +65,11 @@ const rules: FormRules = {
   password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 };
 const login = ref<FormInstance>();
+
+const register = () => {
+  router.push("/register");
+};
+
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid: boolean) => {

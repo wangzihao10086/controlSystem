@@ -1,65 +1,66 @@
 <template>
-  <div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column fixed prop="date" label="Date" width="150" />
-      <el-table-column prop="name" label="Name" width="120" />
-      <el-table-column prop="state" label="State" width="120" />
-      <el-table-column prop="city" label="City" width="120" />
-      <el-table-column prop="address" label="Address" width="600" />
-      <el-table-column prop="zip" label="Zip" width="120" />
-      <el-table-column fixed="right" label="Operations" width="120">
-        <template #default>
-          <el-button link type="primary" size="small" @click="handleClick"
-            >Detail</el-button
-          >
-          <el-button link type="primary" size="small">Edit</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column fixed type="index" width="50" />
+    <el-table-column prop="company_name" label="公司全称" />
+    <el-table-column prop="name" label="提交人" />
+    <el-table-column prop="id_card_no" label="身份证号" />
+    <el-table-column prop="phone" label="手机号" />
+    <el-table-column prop="create_time" label="提交时间" />
+    <el-table-column prop="update_time" label="修改时间" />
+    <el-table-column fixed="right" label="操作" width="120">
+      <template #default="scope">
+        <el-button
+          v-if="scope.row.status === 0"
+          type="success"
+          size="small"
+          @click="handleClick(scope.row)"
+          plain
+          >审核</el-button
+        >
+        <el-button
+          v-else
+          type="primary"
+          size="small"
+          plain
+          @click="handleClick(scope.row)"
+          >查看</el-button
+        >
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script setup lang="ts">
-const handleClick = () => {
-  console.log("click");
+const handleClick = (info: object) => {
+  console.log(info);
 };
 
 const tableData = [
   {
-    date: "2016-05-03",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-    tag: "Home",
+    create_time: "2016-05-03",
+    update_time: "2023-06-01",
+    user_id: "1631561",
+    company_name: "乐播",
+    company_desc: "无线投屏",
+    homepage: "",
+    licence_url: "Home",
+    id_card_no: "441622200101011001",
+    name: "lebo",
+    phone: "1008611",
+    status: 0,
   },
   {
-    date: "2016-05-02",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-    tag: "Office",
-  },
-  {
-    date: "2016-05-04",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-    tag: "Home",
-  },
-  {
-    date: "2016-05-01",
-    name: "Tom",
-    state: "California",
-    city: "Los Angeles",
-    address: "No. 189, Grove St, Los Angeles",
-    zip: "CA 90036",
-    tag: "Office",
+    create_time: "2016-05-03",
+    update_time: "2023-06-01",
+    user_id: "1631561",
+    company_name: "乐播",
+    company_desc: "无线投屏",
+    homepage: "",
+    licence_url: "Home",
+    id_card_no: "441622200101011001",
+    name: "lebo",
+    phone: "1008611",
+    status: 1,
   },
 ];
 </script>
