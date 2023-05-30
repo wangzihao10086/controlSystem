@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-register">
-      <div class="ms-title">播控系统</div>
+      <div class="ms-title">注册中心</div>
       <el-form
         :model="param"
         :rules="rules"

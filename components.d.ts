@@ -18,7 +18,6 @@ declare module '@vue/runtime-core' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
-    ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     Header: typeof import('./src/components/header.vue')['default']
     RecordSearch: typeof import('./src/components/recordSearch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

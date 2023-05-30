@@ -10,15 +10,13 @@
       unique-opened
       router
     >
-      <template v-for="item in menu?.items" :key="item.index" >
-          <el-menu-item
-            :index="item.path"
-          >
-            <el-icon>
-              <component :is="item.icon"></component>
-            </el-icon>
-            <template #title>{{ item.title }}</template>
-          </el-menu-item>
+      <template v-for="item in menu?.items" :key="item.index">
+        <el-menu-item :index="item.path">
+          <el-icon>
+            <component :is="item.icon"></component>
+          </el-icon>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
       </template>
     </el-menu>
   </div>
@@ -29,7 +27,7 @@ import { computed } from "vue";
 import { useSidebarStore } from "../store/sidebar";
 import { useRoute } from "vue-router";
 import router from "@/router";
-import { ref,watch } from 'vue';
+import { ref, watch } from "vue";
 import { useStore } from "@/store";
 console.log(router);
 
@@ -53,7 +51,7 @@ interface Menu {
 /** 菜单生成器类 */
 class MenuGenerator {
   /** pinia里面的store */
-  private store: any; 
+  private store: any;
 
   constructor(store: any) {
     this.store = store;
@@ -65,12 +63,15 @@ class MenuGenerator {
     };
     /** 找到name为Home的 */
     const routerArray = router.options.routes;
-    const home = routerArray.find((item) => item.name === "Home")
-    console.log('home', home);
+    const home = routerArray.find((item) => item.name === "Home");
+    console.log("home", home);
     /** 去除里面的403 404页面 */
-    const homeChildren = home?.children?.filter((item) => item?.meta?.title !== "403" && item?.meta?.title !== "404")
+    const homeChildren = home?.children?.filter(
+      (item) => item?.meta?.title !== "403" && item?.meta?.title !== "404"
+    );
     const routes = homeChildren;
-    const authenticated = this.store.getToken !== undefined && this.store.getToken !== '';
+    const authenticated =
+      this.store.getToken !== undefined && this.store.getToken !== "";
 
     routes?.forEach((route) => {
       if (this.isRouteAuthorized(route, authenticated)) {
@@ -96,13 +97,18 @@ class MenuGenerator {
     }
 
     if (route.meta?.roles && route.meta.roles.length > 0) {
-      return route.meta.roles.some((role: string) => this.store.getRole.includes(role));
+      return route.meta.roles.some((role: string) =>
+        this.store.getRole.includes(role)
+      );
     }
 
     return true;
   }
 
-  private generateSubMenu(children: any[] | undefined, authenticated: boolean): MenuItem[] {
+  private generateSubMenu(
+    children: any[] | undefined,
+    authenticated: boolean
+  ): MenuItem[] {
     const subMenu: MenuItem[] = [];
 
     if (children) {
@@ -124,7 +130,6 @@ class MenuGenerator {
 
     return subMenu;
   }
-
 }
 
 const store = useStore();
@@ -134,23 +139,25 @@ const role = computed(() => {
   return store.getRole;
 });
 //监听role的变化
-watch(role, () => {
-  const menuGenerator = new MenuGenerator(store);
-  menu.value = menuGenerator.generateMenu();
-  console.log('menu变化了');
-  console.log('role',role);
-  
-  router.replace(`/${store.getRole}Main`)
-}, {
-  immediate: true
-}
-)
+watch(
+  role,
+  () => {
+    const menuGenerator = new MenuGenerator(store);
+    menu.value = menuGenerator.generateMenu();
+    console.log("menu变化了");
+    console.log("role", role);
+
+    router.replace(`/${store.getRole}Main`);
+  },
+  {
+    immediate: true,
+  }
+);
 
 const route = useRoute();
 const onRoutes = computed(() => {
   return route.path;
 });
-
 
 const sidebar = useSidebarStore();
 </script>
