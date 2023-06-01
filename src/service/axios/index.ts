@@ -3,97 +3,124 @@ import axios, {
   AxiosResponse,
   AxiosError,
   InternalAxiosRequestConfig,
+  CancelTokenSource,
+  AxiosRequestConfig,
 } from 'axios'
-import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
 import { getHttpStatusMessage } from './helper/getHttpStatusMessage'
+import { ElMessage } from 'element-plus'
 
-class HttpClient {
-  private instance: AxiosInstance
+// 创建 Axios 实例
+const instance: AxiosInstance = axios.create({
+  // 设置基础 URL(自动根据环境配置不同的 BASE_URL)
+  baseURL: import.meta.env.VITE_APP_BASE_API,
+  // 设置超时时间
+  timeout: 5000,
+})
 
-  constructor() {
-    // 创建 Axios 实例
-    this.instance = axios.create({
-      // 设置基础 URL(自动根据环境配置不同的BASE_URL)-BASE_URL请查看对应的环境配置
-      baseURL: import.meta.env.VITE_APP_BASE_API,
-      // 设置超时时间
-      timeout: 5000,
+// 定义请求计数器和取消令牌集合
+let requestCount = 0
+let cancelTokens: CancelTokenSource[] = []
+
+// 请求拦截器
+instance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // 在发送请求之前做一些处理
+    const token = localStorage.getItem('token') || null
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
+
+    // 生成取消令牌
+    const cancelToken = axios.CancelToken.source()
+    config.cancelToken = cancelToken.token
+
+    // 添加取消令牌到集合
+    cancelTokens.push(cancelToken)
+
+    // 请求计数器增加
+    requestCount++
+
+    return config
+  },
+  (error: AxiosError) => {
+    // 请求错误处理
+    return Promise.reject(error)
+  }
+)
+
+// 响应拦截器
+instance.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // 对响应数据做一些处理
+    return response.data
+  },
+  (error: any) => {
+    // 响应错误处理
+    if (axios.isCancel(error)) {
+      // 如果是取消请求的错误，直接抛出错误
+      throw error
+    }
+
+    if (error && error.response) {
+      // 响应已接收，但状态码不在 2xx 范围内
+      const { status, data } = error.response
+      const errorMessage =
+        data && data.message ? data.message : getHttpStatusMessage(status)
+      ElMessage.error(`错误代码：${status}，错误信息：${errorMessage}`)
+    } else if (error.request) {
+      // 请求已发出，但未收到响应
+      ElMessage.error('请求失败，请检查网络连接')
+    } else {
+      // 其他错误
+      ElMessage.error('请求出错')
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+const useHttp = () => {
+  const loading = ref(false)
+
+  const request = async <T = any>(config: AxiosRequestConfig): Promise<T> => {
+    try {
+      // 开始请求时设置加载状态为 true
+      loading.value = true
+      const response = await instance.request<T>(config)
+      return response as T
+    } catch (error) {
+      throw error
+    } finally {
+      // 请求结束后设置加载状态为 false
+      loading.value = false
+    }
+  }
+
+  const cancel = (message?: string): void => {
+    // 取消最新的请求
+    if (requestCount > 0) {
+      cancelTokens[requestCount - 1].cancel(message)
+      cancelTokens.pop()
+      requestCount--
+    }
+  }
+
+  const cancelAll = (message?: string): void => {
+    // 取消所有未完成的请求
+    cancelTokens.forEach((cancelToken) => {
+      cancelToken.cancel(message)
     })
-
-    // 请求拦截器
-    this.instance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        // 在发送请求之前做一些处理
-        const token = localStorage.getItem('token') || null
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`
-        }
-        return config
-      },
-      (error: AxiosError) => {
-        // 请求错误处理
-        return Promise.reject(error)
-      }
-    )
-
-    // 响应拦截器
-    this.instance.interceptors.response.use(
-      (response: AxiosResponse) => {
-        // 对响应数据做一些处理
-        return response
-      },
-      (error: AxiosError<any>) => {
-        // 响应错误处理
-        if (error.response) {
-          // 响应已接收，但状态码不在 2xx 范围内
-          const { status, data } = error.response
-          const errorMessage =
-            data && data.message ? data.message : getHttpStatusMessage(status)
-          ElMessage.error(`错误代码：${status}，错误信息：${errorMessage}`)
-        } else {
-          // 请求未发出或未收到响应
-          ElMessage.error('请求失败，请检查网络连接')
-        }
-        return Promise.reject(error)
-      }
-    )
+    cancelTokens = []
+    requestCount = 0
   }
 
-  get<T = any>(url: string, config?: InternalAxiosRequestConfig): Promise<T> {
-    // 发送 GET 请求，并返回 Promise
-    return this.instance.get<T>(url, config).then((response) => response.data)
-  }
-
-  post<T = any>(
-    url: string,
-    data?: any,
-    config?: InternalAxiosRequestConfig
-  ): Promise<T> {
-    // 发送 POST 请求，并返回 Promise
-    return this.instance
-      .post<T>(url, data, config)
-      .then((response) => response.data)
-  }
-
-  put<T = any>(
-    url: string,
-    data?: any,
-    config?: InternalAxiosRequestConfig
-  ): Promise<T> {
-    // 发送 PUT 请求，并返回 Promise
-    return this.instance
-      .put<T>(url, data, config)
-      .then((response) => response.data)
-  }
-
-  delete<T = any>(
-    url: string,
-    config?: InternalAxiosRequestConfig
-  ): Promise<T> {
-    // 发送 DELETE 请求，并返回 Promise
-    return this.instance
-      .delete<T>(url, config)
-      .then((response) => response.data)
+  return {
+    request,
+    cancel,
+    cancelAll,
+    loading,
   }
 }
 
-export default HttpClient
+export default useHttp

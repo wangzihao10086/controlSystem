@@ -13,7 +13,7 @@
       <template v-for="item in menu?.items" :key="item.index">
         <el-menu-item :index="item.path">
           <el-icon>
-            <component :is="item.icon"></component>
+            <component :is=item.icon></component>
           </el-icon>
           <template #title>{{ item.title }}</template>
         </el-menu-item>
@@ -78,6 +78,7 @@ class MenuGenerator {
         const menuItem: MenuItem = {
           path: route.path,
           title: route.meta?.title as any,
+          icon: route.meta?.icon as any,
         };
 
         if (route.meta?.roles) {
