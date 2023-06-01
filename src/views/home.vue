@@ -6,7 +6,10 @@
       <router-view v-slot="{ Component }">
         <transition name="move" mode="out-in">
           <keep-alive :include="tags.nameList">
-            <component :is="Component"></component>
+            <el-card>
+              <component :is="Component"></component>
+            </el-card>
+
           </keep-alive>
         </transition>
       </router-view>

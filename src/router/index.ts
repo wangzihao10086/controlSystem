@@ -17,6 +17,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/login/login.vue"),
   },
   {
+    path: "/register",
+    name: "register",
+    meta: {
+      requiresAuth: true,
+      roles: ["admin", "user"],
+      title: "adminAndUser",
+    },
+    component: () => import("@/views/login/register.vue"),
+  },
+  {
     path: "/",
     name: "Home",
     component: Home,
@@ -25,9 +35,10 @@ const routes: RouteRecordRaw[] = [
         path: "/userMain",
         name: "userMain",
         meta: {
-          title: "用户首页",
+          title: "账号信息",
           requiresAuth: true,
           roles: ["user"],
+          icon: "House",
         },
         component: () => import("@/views/user/main.vue"),
       },
@@ -56,14 +67,24 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true, roles: ["admin"], title: "投屏管控" },
       },
       {
-        path: "/user1",
-        component: () => import("@/views/user/user1.vue"),
-        meta: { requiresAuth: true, roles: ["user"], title: "用户1" },
+        path: "/user/appService",
+        component: () => import("@/views/user/appService.vue"),
+        meta: {
+          requiresAuth: true,
+          roles: ["user"],
+          icon: "Coin",
+          title: "应用/服务上架管理",
+        },
       },
       {
         path: "/user2",
         component: () => import("@/views/user/user2.vue"),
-        meta: { requiresAuth: true, roles: ["user"], title: "用户2" },
+        meta: {
+          requiresAuth: true,
+          roles: ["user"],
+          icon: "Setting",
+          title: "其他菜单",
+        },
       },
       {
         path: "/403",
@@ -96,7 +117,7 @@ router.beforeEach(async (to, from, next) => {
     ? to.meta.roles
     : [];
 
-  if (to.path !== "/login" && !isAuthenticated) {
+  if (to.path !== "/login" && to.path != "/register" && !isAuthenticated) {
     /** 未登录重定向到登录页 */
     console.log(to, from, "未登录");
     next("/login");

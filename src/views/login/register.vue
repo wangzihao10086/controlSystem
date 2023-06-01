@@ -45,7 +45,20 @@
           注册
         </el-button>
       </div>
+      <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
     </div>
+     <el-dialog
+        v-model="recordDialogVisible"
+        title="备案查询"
+        width="50%"
+        align-center
+        @close="closeRecordDialog"
+      >
+       <div class="flex flex-items-center">
+            <el-input class="!w-[300px]"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
+            <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
+          </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -54,6 +67,19 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
+/** 备案号 */
+const recordNum = ref('')
+/** 备案查询对话框显隐 */
+const recordDialogVisible = ref(false)
+//关闭备案查询对话框
+const closeRecordDialog = () => {
+  recordDialogVisible.value = false
+  recordNum.value = ''
+}
+//点击备案查询按钮事件
+const handleRecordSearch = () => {
+  console.log(recordNum.value)
+}
 interface registerInfo {
   username: string;
   password: string;
