@@ -12,7 +12,8 @@
     "esModuleInterop": true,
     "types": ["element-plus/global"],
     "rootDir": ".",
-    "paths": { "@/*": ["./src/*"] },
+    "baseUrl": "./",
+    "paths": { "@/*": ["src/*"] },
     /* Bundler mode */
     "allowImportingTsExtensions": true,
     "noEmit": true,

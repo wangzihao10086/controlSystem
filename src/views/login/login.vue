@@ -37,18 +37,16 @@
       </div>
       <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
     </div>
-  
-   
       <el-dialog
       v-model="recordDialogVisible"
       title="备案查询"
       width="50%"
       align-center
-      @close="recordDialogVisible = false"
+      @close="closeRecordDialog"
     >
-     <div class="record-search">
-          <el-input class="record-search-input"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
-          <el-button type="primary" class="bg-[red]">Primary</el-button>
+     <div class="flex flex-items-center">
+          <el-input class="!w-[300px]"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
+          <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
         </div>
     </el-dialog>
   </div>
@@ -63,7 +61,15 @@ import type { FormInstance, FormRules } from "element-plus";
 const recordNum = ref('')
 /** 备案查询对话框显隐 */
 const recordDialogVisible = ref(false)
-
+//关闭备案查询对话框
+const closeRecordDialog = () => {
+  recordDialogVisible.value = false
+  recordNum.value = ''
+}
+//点击备案查询按钮事件
+const handleRecordSearch = () => {
+  console.log(recordNum.value)
+}
 interface LoginInfo {
   username: string;
   password: string;
@@ -158,13 +164,5 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   }
 }
-//备案号查询相关样式
-.record-search{
-  display: flex;
-  align-items: center;
-  .record-search-input {
-  width: 300px;
-  margin: 20px 0;
-}
-}
+
 </style>
