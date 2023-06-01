@@ -31,25 +31,29 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import("@/views/user/main.vue"),
       },
+      // {
+      //   path: "/adminMain",
+      //   redirect: "/qualification",
+      // },
       {
         path: "/adminMain",
-        name: "adminMain",
-        meta: {
-          title: "管理员首页",
-          requiresAuth: true,
-          roles: ["admin"],
-        },
-        component: () => import("@/views/admin/main.vue"),
+        component: () => import("@/views/admin/qualificationReview.vue"),
+        meta: { requiresAuth: true, roles: ["admin"], title: "资质审核" },
       },
       {
-        path: "/admin1",
-        component: () => import("@/views/admin/admin1.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "admin1" },
+        path: "/listing",
+        component: () => import("@/views/admin/listingReview.vue"),
+        meta: { requiresAuth: true, roles: ["admin"], title: "上架审核" },
       },
       {
-        path: "/admin2",
-        component: () => import("@/views/admin/admin2.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "管理员2" },
+        path: "/policy",
+        component: () => import("@/views/admin/reviewPolicy.vue"),
+        meta: { requiresAuth: true, roles: ["admin"], title: "审核规则" },
+      },
+      {
+        path: "/projection",
+        component: () => import("@/views/admin/screenProjectControl.vue"),
+        meta: { requiresAuth: true, roles: ["admin"], title: "投屏管控" },
       },
       {
         path: "/user1",
@@ -71,17 +75,6 @@ const routes: RouteRecordRaw[] = [
         path: "/404",
         component: () => import("@/views/others/404.vue"),
         meta: { requiresAuth: true, roles: ["admin", "user"], title: "404" },
-      },
-      {
-        path: "/qualification",
-        name: "QualificationReview",
-        meta: {
-          title: "资质审核",
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/admin/qualificationReview.vue"
-          ),
       },
     ],
   },
