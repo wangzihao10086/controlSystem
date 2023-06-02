@@ -43,7 +43,7 @@ import { computed, reactive, ref } from "vue";
 // const dialogVisible = ref(false);
 
 import { ElForm, ElMessage } from "element-plus";
-// import type { FormRules } from "element-plus";
+import type { FormRules } from "element-plus";
 
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({

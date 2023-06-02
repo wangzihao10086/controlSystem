@@ -49,22 +49,42 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/adminMain",
         component: () => import("@/views/admin/qualificationReview.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "资质审核" },
+        meta: {
+          requiresAuth: true,
+          roles: ["admin"],
+          title: "资质审核",
+          icon: "House",
+        },
       },
       {
         path: "/listing",
         component: () => import("@/views/admin/listingReview.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "上架审核" },
+        meta: {
+          requiresAuth: true,
+          roles: ["admin"],
+          title: "上架审核",
+          icon: "Compass",
+        },
       },
       {
         path: "/policy",
         component: () => import("@/views/admin/reviewPolicy.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "审核规则" },
+        meta: {
+          requiresAuth: true,
+          roles: ["admin"],
+          title: "审核规则",
+          icon: "Aim",
+        },
       },
       {
         path: "/projection",
         component: () => import("@/views/admin/screenProjectControl.vue"),
-        meta: { requiresAuth: true, roles: ["admin"], title: "投屏管控" },
+        meta: {
+          requiresAuth: true,
+          roles: ["admin"],
+          title: "投屏管控",
+          icon: "Monitor",
+        },
       },
       {
         path: "/user/appService",

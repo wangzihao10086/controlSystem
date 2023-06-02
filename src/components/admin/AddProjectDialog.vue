@@ -325,6 +325,7 @@ const cascaderOptions = [
 ];
 
 const formRef = ref();
+// 表单数据
 const formData = reactive({
   rule_name: "",
   projector: "",
@@ -352,6 +353,7 @@ const validateName = (rule, value, callback) => {
   }
 };
 
+// 表单验证规则
 const rules: FormRules = {
   rule_name: [
     {
@@ -390,6 +392,7 @@ const rules: FormRules = {
 // 通过父组件修改 show 的值
 const controlDialog = (value: boolean) => {
   emits("update:modelValue", value);
+  console.log(formRef.value);
   formRef.value?.resetFields();
   formData.options = [];
 };
@@ -425,6 +428,12 @@ watch(
       formData.fail_reason = props.data?.fail_reason;
       formData.status = props.data?.status;
     } else {
+      formData.rule_name = "";
+      formData.projector = "";
+      formData.device_name = "";
+      formData.user_name = "";
+      formData.url = "";
+      formData.fail_reason = "";
       formRef.value?.resetFields();
     }
   },

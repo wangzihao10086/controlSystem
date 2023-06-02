@@ -78,6 +78,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
+import { Message } from "@/components/common/Message";
 
 import AddProjectDialog from "@/components/admin/AddProjectDialog.vue";
 
@@ -126,14 +127,14 @@ const tableData = [
 // 修改规则状态
 const changeStatus = (row: object, status: number) => {
   console.log(row, status);
-  if (status == 0) {
-    ElMessageBox.confirm(`确定将改规则${status ? "重置" : "生效"}？`, "提示", {
+  if (status == -1) {
+    ElMessageBox.confirm(`确定将改规则生效？`, "提示", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning",
     })
       .then(() => {
-        ElMessage({
+        Message({
           type: "success",
           message: "操作成功",
         });
@@ -171,8 +172,9 @@ const changeStatus = (row: object, status: number) => {
 // 创建规则
 const addProjectControl = (type: string, data?: object) => {
   console.log(data);
-  dialogControl.isShow = true;
   dialogControl.type = type;
+  dialogControl.isShow = true;
+
   dialogControl.data = data ? { ...data } : {};
 };
 
