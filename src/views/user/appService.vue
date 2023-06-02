@@ -39,7 +39,7 @@
                 <template #reference>
                   <el-tag type="danger" size="large">审核不通过</el-tag>
                 </template>
-                                                                                                                                                                                                                                                                            </el-popover> -->
+                                                                                                                                                                                                                                                                                    </el-popover> -->
             </div>
 
           </template>
@@ -86,7 +86,7 @@
               <div class="el-upload__tip">
                 只能上传jpg/png文件，且不超过5MB
               </div>
-                                                                                                                                                                                                      </template> -->
+                                                                                                                                                                                                              </template> -->
           </el-upload>
         </el-form-item>
       </el-form>
@@ -101,9 +101,8 @@
     </el-dialog>
     <!-- //^ ^--------------查看/编辑详情的对话框start-------------^ ^ -->
     <Dialog :puton-info="tableList[0]" :status="isEdit" v-model:isShow="sonDialog"></Dialog>
-    <TestDialog @use-hook="MyHook"></TestDialog>
+    <!-- <TestDialog @use-hook="MyHook"></TestDialog> -->
     <!-- //^ ^--------------查看/编辑详情的对话框end-------------^ ^ -->
-    <el-button type="primary" @click="show"> 1</el-button>
   </div>
 </template>
   
@@ -111,16 +110,12 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, FormInstance, FormRules, UploadRequestHandler } from 'element-plus'
 import Dialog from '../user/components/appService-dialog.vue'
-import {
-  TestDialog
-} from '@/components/Dialog'
-import { useDialog } from '@/components/Dialog'
-const [MyHook, { showDialog: showTestDialog }] = useDialog()
-const show = () => {
-  console.log(1);
+// import {
+//   TestDialog
+// } from '@/components/Dialog'
+// import { useDialog } from '@/components/Dialog'
+// const [MyHook, { showDialog: showTestDialog }] = useDialog()
 
-  showTestDialog()
-}
 /** 搜索栏接口 */
 interface SearchForm {
   /** 名称 */
