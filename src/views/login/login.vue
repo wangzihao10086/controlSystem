@@ -17,22 +17,14 @@
       <div class="login-btn">
         <el-button type="primary" @click="submitForm(login)" :loading="loading">登录</el-button>
       </div>
-      <<<<<<< HEAD <el-button type="primary" @click="recordDialogVisible = true">备案查询</el-button>
+      <el-button type="primary" @click="recordDialogVisible = true">备案查询</el-button>
     </div>
     <el-dialog v-model="recordDialogVisible" title="备案查询" width="50%" align-center @close="closeRecordDialog">
       <div class="flex flex-items-center">
         <el-input class="!w-[300px]" v-model="recordNum" placeholder="请输入备案号进行查询" clearable />
         <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
-        =======
-        <el-button type="primary" @click="recordDialogVisible = true">备案查询</el-button>
       </div>
-      <el-dialog v-model="recordDialogVisible" title="备案查询" width="50%" align-center @close="closeRecordDialog">
-        <div class="flex flex-items-center">
-          <el-input class="!w-[300px]" v-model="recordNum" placeholder="请输入备案号进行查询" clearable />
-          <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
-          >>>>>>> origin/master
-        </div>
-      </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
