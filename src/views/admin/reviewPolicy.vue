@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
-      <el-form-item label="URL" prop="url">
-        <el-input v-model="searchInfo.url" placeholder="URL" />
+      <el-form-item label="规则" prop="rule">
+        <el-input v-model="searchInfo.rule" placeholder="rule" />
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="onSubmit" icon="Search"
@@ -124,7 +124,7 @@ const tableData = [
 ];
 
 const searchInfo = reactive({
-  url: "",
+  rule: "",
 });
 
 const dialogControl = reactive({

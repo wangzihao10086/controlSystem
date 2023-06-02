@@ -33,50 +33,68 @@
         >注册账号</el-button
       >
       <div class="login-btn">
-        <el-button type="primary" @click="submitForm(login)">登录</el-button>
+        <el-button type="primary" @click="submitForm(login)" :loading="loading"
+          >登录</el-button
+        >
       </div>
-      <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
+      <el-button type="primary" @click="recordDialogVisible = true"
+        >备案查询</el-button
+      >
     </div>
-      <el-dialog
+    <el-dialog
       v-model="recordDialogVisible"
       title="备案查询"
       width="50%"
       align-center
       @close="closeRecordDialog"
     >
-     <div class="flex flex-items-center">
-          <el-input class="!w-[300px]"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
-          <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
-        </div>
+      <div class="flex flex-items-center">
+        <el-input
+          class="!w-[300px]"
+          v-model="recordNum"
+          placeholder="请输入备案号进行查询"
+          clearable
+        />
+        <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch"
+          >查询</el-button
+        >
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import router from "@/router";
 import type { FormInstance, FormRules } from "element-plus";
+import { Message } from "@/components/common/Message";
+
+import { useLogin, useUserInfo } from "@/hooks/api/common/index";
+import LocalCache from "@/utils/cache";
+
+const { loading, loginRequest } = useLogin();
+const { userInfoRequest } = useUserInfo();
+
 /** 备案号 */
-const recordNum = ref('')
+const recordNum = ref("");
 /** 备案查询对话框显隐 */
-const recordDialogVisible = ref(false)
+const recordDialogVisible = ref(false);
 //关闭备案查询对话框
 const closeRecordDialog = () => {
-  recordDialogVisible.value = false
-  recordNum.value = ''
-}
+  recordDialogVisible.value = false;
+  recordNum.value = "";
+};
 //点击备案查询按钮事件
 const handleRecordSearch = () => {
-  console.log(recordNum.value)
-}
+  console.log(recordNum.value);
+};
 interface LoginInfo {
   username: string;
   password: string;
 }
-const router = useRouter();
+
 const param = reactive<LoginInfo>({
-  username: "admin",
+  username: "1231234",
   password: "123123",
 });
 const rules: FormRules = {
@@ -92,20 +110,33 @@ const rules: FormRules = {
 const login = ref<FormInstance>();
 
 const register = () => {
-  router.push("/register");
+  router.replace("/register");
 };
 
+// 点击登录按钮
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  formEl.validate((valid: boolean) => {
+  formEl.validate(async (valid: boolean) => {
     if (valid) {
-      ElMessage.success("登录成功");
-      router.push("/");
+      loginRequest({
+        loginId: param.username,
+        pwd: param.password,
+      }).then((res) => {
+        storeUserInfo(res.data.token);
+        Message.success("登录成功");
+        router.push("/");
+        userInfoRequest({ token: res.data.token });
+      });
     } else {
-      ElMessage.error("登录失败");
+      Message.error("登录失败");
       return false;
     }
   });
+};
+
+// 保存用户数据
+const storeUserInfo = (token: string) => {
+  LocalCache.setCache("token", token);
 };
 </script>
 
@@ -164,5 +195,4 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   }
 }
-
 </style>
