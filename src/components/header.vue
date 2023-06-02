@@ -2,8 +2,12 @@
   <div class="header">
     <!-- 折叠按钮 -->
     <div class="collapse-btn" @click="collapseChage">
-      <el-icon v-if="sidebar.collapse"><Expand /></el-icon>
-      <el-icon v-else><Fold /></el-icon>
+      <el-icon v-if="sidebar.collapse">
+        <Expand />
+      </el-icon>
+      <el-icon v-else>
+        <Fold />
+      </el-icon>
     </div>
     <div class="logo">后台管理系统</div>
     <div class="header-right">
@@ -29,8 +33,9 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useSidebarStore } from "../store/sidebar";
-import { useRouter } from "vue-router";
-
+// import { useRouter } from "vue-router";
+import router from "@/router";
+import { useStore } from "@/store";
 const username: string | null = localStorage.getItem("ms_username");
 
 const sidebar = useSidebarStore();
@@ -44,12 +49,17 @@ onMounted(() => {
     collapseChage();
   }
 });
-
+const store = useStore()
 // 用户名下拉菜单选择事件
-const router = useRouter();
-const handleCommand = (command: string) => {
+// const router = useRouter();
+const handleCommand = async (command: string) => {
   if (command == "loginout") {
-    localStorage.removeItem("token");
+    store.clearToken
+    store.clearUserInfo
+    // store.setRole('')
+    // store.setToken('')
+    // await localStorage.removeItem("role");
+    // await localStorage.removeItem("token");
     router.push("/login");
   }
 };
@@ -63,6 +73,7 @@ const handleCommand = (command: string) => {
   font-size: 22px;
   color: #fff;
 }
+
 .collapse-btn {
   display: flex;
   justify-content: center;
@@ -72,25 +83,30 @@ const handleCommand = (command: string) => {
   padding: 0 21px;
   cursor: pointer;
 }
+
 .header .logo {
   float: left;
   width: 250px;
   line-height: 70px;
 }
+
 .header-right {
   float: right;
   padding-right: 50px;
 }
+
 .header-user-con {
   display: flex;
   height: 70px;
   align-items: center;
 }
+
 .btn-fullscreen {
   transform: rotate(45deg);
   margin-right: 5px;
   font-size: 24px;
 }
+
 .btn-bell,
 .btn-fullscreen {
   position: relative;
@@ -102,6 +118,7 @@ const handleCommand = (command: string) => {
   display: flex;
   align-items: center;
 }
+
 .btn-bell-badge {
   position: absolute;
   right: 4px;
@@ -112,21 +129,26 @@ const handleCommand = (command: string) => {
   background: #f56c6c;
   color: #fff;
 }
+
 .btn-bell .el-icon-lx-notice {
   color: #fff;
 }
+
 .user-name {
   margin-left: 10px;
 }
+
 .user-avator {
   margin-left: 20px;
 }
+
 .el-dropdown-link {
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
 }
+
 .el-dropdown-menu__item {
   text-align: center;
 }

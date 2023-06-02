@@ -34,5 +34,17 @@ export default defineConfig(({ command, mode }) => {
         '@': path.join(__dirname, 'src'),
       },
     },
+    // 反向代理
+    server: {
+      // 是否自动在浏览器打开
+      open: true,
+      proxy: {
+        '/api': {
+          target: '120.79.212.106:9911/',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
+    },
   }
 })

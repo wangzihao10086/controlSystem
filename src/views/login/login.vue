@@ -2,52 +2,28 @@
   <div class="login-wrap">
     <div class="ms-login">
       <div class="ms-title">播控系统</div>
-      <el-form
-        :model="param"
-        :rules="rules"
-        ref="login"
-        label-width="0px"
-        class="ms-content"
-      >
+      <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="username">
-          <el-input
-            v-model="param.username"
-            placeholder="请输入手机号/邮箱"
-            class="input-box"
-          >
+          <el-input v-model="param.username" placeholder="请输入手机号/邮箱" class="input-box">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            type="password"
-            show-password
-            class="input-box"
-            placeholder="请输入密码"
-            v-model="param.password"
-            @keyup.enter="submitForm(login)"
-          >
+          <el-input type="password" show-password class="input-box" placeholder="请输入密码" v-model="param.password"
+            @keyup.enter="submitForm(login)">
           </el-input>
         </el-form-item>
       </el-form>
-      <el-button text class="btn-register" @click="register"
-        >注册账号</el-button
-      >
+      <el-button text class="btn-register" @click="register">注册账号</el-button>
       <div class="login-btn">
         <el-button type="primary" @click="submitForm(login)">登录</el-button>
       </div>
-      <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
+      <el-button type="primary" @click="recordDialogVisible = true">备案查询</el-button>
     </div>
-      <el-dialog
-      v-model="recordDialogVisible"
-      title="备案查询"
-      width="50%"
-      align-center
-      @close="closeRecordDialog"
-    >
-     <div class="flex flex-items-center">
-          <el-input class="!w-[300px]"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
-          <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
-        </div>
+    <el-dialog v-model="recordDialogVisible" title="备案查询" width="50%" align-center @close="closeRecordDialog">
+      <div class="flex flex-items-center">
+        <el-input class="!w-[300px]" v-model="recordNum" placeholder="请输入备案号进行查询" clearable />
+        <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -57,6 +33,7 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
+import { useStore } from "@/store";
 /** 备案号 */
 const recordNum = ref('')
 /** 备案查询对话框显隐 */
@@ -94,12 +71,24 @@ const login = ref<FormInstance>();
 const register = () => {
   router.push("/register");
 };
-
+const store = useStore();
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid: boolean) => {
     if (valid) {
       ElMessage.success("登录成功");
+      // await store.setRole('user')
+      store.setToken('token')
+      localStorage.setItem('role', 'admin')
+      console.log(store.getToken);
+      store.setUserInfo({
+        role: 'admin'
+      })
+      // await localStorage.setItem("token", "123456");
+      // await localStorage.setItem("role", 'user');
+      console.log(store);
+      console.log(store.getToken);
+      // console.log(store.getRole);
       router.push("/");
     } else {
       ElMessage.error("登录失败");
@@ -116,6 +105,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   height: 100%;
   background-image: url(../../assets/img/login-bg.svg);
   background-size: 100%;
+
   .ms-login {
     position: absolute;
     left: 50%;
@@ -127,6 +117,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     background: #f8f8f8;
     overflow: hidden;
     padding: 0px 30px 30px;
+
     .ms-title {
       width: 100%;
       line-height: 120px;
@@ -137,25 +128,31 @@ const submitForm = (formEl: FormInstance | undefined) => {
       font-weight: bold;
       letter-spacing: 3px;
     }
+
     .ms-content {
       padding-top: 30px;
+
       .input-box {
         height: 45px;
       }
+
       .btn-register {
         float: right;
         color: rgb(18, 133, 255);
         font-weight: bold;
       }
     }
+
     .btn-register {
       float: right;
       color: rgb(18, 133, 255);
       font-weight: bold;
     }
+
     .login-btn {
       text-align: center;
     }
+
     .login-btn button {
       width: 100%;
       height: 36px;
@@ -164,5 +161,4 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   }
 }
-
 </style>
