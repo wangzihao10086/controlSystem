@@ -96,6 +96,7 @@ interface dialogControlType {
 
 import { reactive } from "vue";
 import { ElMessageBox, ElMessage, ElForm } from "element-plus";
+import { Message } from "@/components/common/Message";
 
 import { hideIdCard } from "@/assets/ts/functions.ts";
 
@@ -195,8 +196,7 @@ const qualReviewRes = (result: number) => {
       type: "warning",
     })
       .then(() => {
-        ElMessage({
-          type: "success",
+        Message.success({
           message: "操作成功",
         });
         dialogControl.isShow = false;
