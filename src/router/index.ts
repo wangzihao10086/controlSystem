@@ -93,7 +93,7 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           roles: ["user"],
           icon: "Coin",
-          title: "应用/服务上架管理",
+          title: "上架管理",
         },
       },
       {

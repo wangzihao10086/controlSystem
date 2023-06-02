@@ -52,6 +52,9 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
+    if (JSON.parse(response.data).code != 200) {
+      return ElMessage.error(JSON.parse(response.data).msg)
+    }
     // 对响应数据做一些处理
     if (response && (response?.code as any) != 200) {
     }
