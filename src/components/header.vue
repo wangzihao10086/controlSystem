@@ -54,13 +54,9 @@ const store = useStore()
 // const router = useRouter();
 const handleCommand = async (command: string) => {
   if (command == "loginout") {
-    store.clearToken
-    store.clearUserInfo
-    // store.setRole('')
-    // store.setToken('')
-    // await localStorage.removeItem("role");
-    // await localStorage.removeItem("token");
-    router.push("/login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    router.replace("/login");
   }
 };
 </script>

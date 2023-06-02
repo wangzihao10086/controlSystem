@@ -36,12 +36,11 @@ export default defineConfig(({ command, mode }) => {
     },
     // 反向代理
     server: {
-      // 是否自动在浏览器打开
-      open: true,
       proxy: {
         '/api': {
-          target: '120.79.212.106:9911/',
+          target: env.VITE_APP_API_BASE_URL,
           changeOrigin: true,
+          // 将请求中/api用空值替换重写，根据实际业务修改
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },

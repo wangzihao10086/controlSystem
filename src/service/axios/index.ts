@@ -13,7 +13,8 @@ import { ElMessage } from 'element-plus'
 // 创建 Axios 实例
 const instance: AxiosInstance = axios.create({
   // 设置基础 URL(自动根据环境配置不同的 BASE_URL)
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  // baseURL: import.meta.env.VITE_APP_API_BASE_URL,
+  baseURL: '/api',
   // 设置超时时间
   timeout: 5000,
 })
@@ -52,9 +53,10 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     // 对响应数据做一些处理
-    if (JSON.parse(response.data).code != 200) {
-      return ElMessage.error(JSON.parse(response.data).msg)
+    if (response.data.code != 200) {
+      return ElMessage.error(response.data.msg)
     }
+    // 对响应数据做一些处理
     return response.data
   },
   (error: any) => {
