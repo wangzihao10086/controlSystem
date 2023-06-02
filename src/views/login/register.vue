@@ -10,108 +10,161 @@
         ref="register"
         class="ms-content"
       >
-        <el-form-item prop="username" label="账号">
+        <el-form-item prop="nickname" label="昵称">
           <el-input
-            v-model="param.username"
-            placeholder="请输入手机号/邮箱"
+            v-model="param.nickname"
+            placeholder="请输入昵称"
             size="large"
           >
           </el-input>
         </el-form-item>
-        <el-form-item prop="password" label="密码">
+        <el-form-item prop="phone" label="手机">
+          <el-input
+            v-model="param.phone"
+            placeholder="请输入手机号"
+            size="large"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱">
+          <el-input v-model="param.email" placeholder="请输入邮箱" size="large">
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="pwd" label="密码">
           <el-input
             type="password"
             show-password
             placeholder="请输入密码"
             size="large"
-            v-model="param.password"
+            v-model="param.pwd"
           >
           </el-input>
         </el-form-item>
-        <el-form-item prop="passwordSub" label="确认密码">
+        <el-form-item prop="pwdSub" label="确认密码">
           <el-input
             type="password"
-            show-password
             placeholder="请再次输入密码"
             size="large"
-            v-model="param.password"
+            v-model="param.pwdSub"
             @keyup.enter="submitForm(register)"
           >
           </el-input>
         </el-form-item>
       </el-form>
       <div class="register-btn">
-        <el-button type="primary" @click="submitForm(register)">
+        <el-button
+          type="primary"
+          @click="submitForm(register)"
+          :loading="loading"
+        >
           注册
         </el-button>
       </div>
-      <el-button type="primary" @click="recordDialogVisible = true" >备案查询</el-button>
-    </div>
-     <el-dialog
-        v-model="recordDialogVisible"
-        title="备案查询"
-        width="50%"
-        align-center
-        @close="closeRecordDialog"
+      <el-button type="primary" @click="recordDialogVisible = true"
+        >备案查询</el-button
       >
-       <div class="flex flex-items-center">
-            <el-input class="!w-[300px]"  v-model="recordNum" placeholder="请输入备案号进行查询" clearable  />
-            <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch">查询</el-button>
-          </div>
-      </el-dialog>
+    </div>
+    <el-dialog
+      v-model="recordDialogVisible"
+      title="备案查询"
+      width="50%"
+      align-center
+      @close="closeRecordDialog"
+    >
+      <div class="flex flex-items-center">
+        <el-input
+          class="!w-[300px]"
+          v-model="recordNum"
+          placeholder="请输入备案号进行查询"
+          clearable
+        />
+        <el-button type="primary" class="ml-[20px]" @click="handleRecordSearch"
+          >查询</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
+import { Message } from "@/components/common/Message";
+
+import { useRegister } from "@/hooks/api/common";
+
+const { loading, registerRequest } = useRegister();
+
 /** 备案号 */
-const recordNum = ref('')
+const recordNum = ref("");
 /** 备案查询对话框显隐 */
-const recordDialogVisible = ref(false)
+const recordDialogVisible = ref(false);
 //关闭备案查询对话框
 const closeRecordDialog = () => {
-  recordDialogVisible.value = false
-  recordNum.value = ''
-}
+  recordDialogVisible.value = false;
+  recordNum.value = "";
+};
 //点击备案查询按钮事件
 const handleRecordSearch = () => {
-  console.log(recordNum.value)
-}
+  console.log(recordNum.value);
+};
 interface registerInfo {
-  username: string;
-  password: string;
-  passwordSub: string;
+  nickname: string;
+  phone: string;
+  email: string;
+  pwd: string;
+  pwdSub: string;
 }
 const router = useRouter();
 const param = reactive<registerInfo>({
-  username: "",
-  password: "",
-  passwordSub: "",
+  nickname: "",
+  email: "",
+  phone: "",
+  pwd: "",
+  pwdSub: "",
 });
 const rules: FormRules = {
-  username: [
+  nickname: [
     {
       required: true,
-      message: "请输入账号",
+      message: "请输入昵称",
       trigger: "blur",
     },
   ],
-  password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-  passwordSub: [{ required: true, message: "请再次输入密码", trigger: "blur" }],
+  email: [
+    {
+      required: true,
+      pattern:
+        /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*\.[a-zA-Z]{2,10}$/,
+      message: "请正确输入邮箱",
+      trigger: "blur",
+    },
+  ],
+  phone: [
+    {
+      required: true,
+      pattern: /^1[3456789]\d{9}$/,
+      message: "请正确输入手机号",
+      trigger: "blur",
+    },
+  ],
+  pwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
+  pwdSub: [{ required: true, message: "请再次输入密码", trigger: "blur" }],
 };
 const register = ref<FormInstance>();
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid: boolean) => {
     if (valid) {
-      ElMessage.success("注册成功");
-      router.push("/");
-    } else {
-      ElMessage.error("注册失败");
-      return false;
+      if (param.pwd !== param.pwdSub) {
+        Message.error("两次输入密码不一致");
+      } else {
+        registerRequest({ ...param }).then((res) => {
+          Message.success("注册成功");
+          router.push("/login");
+        });
+      }
     }
   });
 };

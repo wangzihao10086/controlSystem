@@ -2,10 +2,10 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home.vue";
 import { useStore } from "@/store/index";
 const routes: RouteRecordRaw[] = [
-  {
-    path: "/",
-    redirect: "/login",
-  },
+  // {
+  //   path: "/",
+  //   redirect: "/login",
+  // },
   {
     path: "/login",
     name: "login",
@@ -133,6 +133,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const store = useStore();
   const isAuthenticated = store.getToken !== undefined && store.getToken !== "";
+  console.log(isAuthenticated, "==============");
   const requiredRoles: string[] = Array.isArray(to.meta.roles)
     ? to.meta.roles
     : [];

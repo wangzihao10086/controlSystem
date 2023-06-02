@@ -50,7 +50,8 @@ const router = useRouter();
 const handleCommand = (command: string) => {
   if (command == "loginout") {
     localStorage.removeItem("token");
-    router.push("/login");
+    localStorage.removeItem("role");
+    router.replace("/login");
   }
 };
 </script>
