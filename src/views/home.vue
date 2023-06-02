@@ -5,7 +5,7 @@
     <div class="content">
       <router-view v-slot="{ Component }">
         <transition name="move" mode="out-in">
-          <keep-alive :include="tags.nameList">
+          <keep-alive>
             <el-card>
               <component :is="Component"></component>
             </el-card>
@@ -18,10 +18,9 @@
 </template>
 <script setup lang="ts">
 import { useSidebarStore } from "../store/sidebar";
-import { useTagsStore } from "../store/tags";
 import vHeader from "../components/header.vue";
 import vSidebar from "../components/sidebar.vue";
 
 const sidebar = useSidebarStore();
-const tags = useTagsStore();
+
 </script>
