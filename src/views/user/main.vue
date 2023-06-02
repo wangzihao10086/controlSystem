@@ -25,6 +25,9 @@
               <el-tag type="warning" size="large">待认证</el-tag>&nbsp;
               <el-button type="primary" @click="authDialogVisible = true">去认证</el-button>
             </div>
+            <div v-else>
+              <el-tag v-if="companyInfo.applicationStatus === '通过'" type="success" size="large">审核通过</el-tag>
+            </div>
           </el-descriptions-item>
         </el-descriptions>
       </div>
@@ -48,8 +51,8 @@
               companyInfo.applicationReason }}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item v-if="companyInfo.applicationStatus === '通过'" label="营业执照" label-align="center"
-            align="center" label-class-name="my-label" class-name="my-content" width="9.375rem">
-            <el-image class="w-[18.125rem]" fit="scale-down" :src="companyInfo.companyLicense">
+            align="center" label-class-name="my-label" class-name="my-content">
+            <el-image class="w-[200px]" fit="scale-down" :src="companyInfo.companyLicense">
               <template #placeholder>
                 <div>
                   营业执照加载中...
@@ -138,18 +141,18 @@ const userInfo = reactive<UserInfo>({
 })
 /** 公司信息 */
 const companyInfo = reactive<CompanyInfo>({
-  companyName: '',
-  companyIntroduce: '',
-  companyHomePage: '',
-  companyLicense: '',
-  applicationStatus: '待审核',
-  applicationReason: '',
-  // companyName: 'companyName',
-  // companyIntroduce: 'companyIntroduce',
-  // companyHomePage: 'companyHomePage',
-  // companyLicense: 'https://picsum.photos/400',
+  // companyName: '',
+  // companyIntroduce: '',
+  // companyHomePage: '',
+  // companyLicense: '',
   // applicationStatus: '待审核',
-  // applicationReason: '就不给你过',
+  // applicationReason: '',
+  companyName: 'companyName',
+  companyIntroduce: 'companyIntroduce',
+  companyHomePage: 'companyHomePage',
+  companyLicense: 'https://picsum.photos/400',
+  applicationStatus: '通过',
+  applicationReason: '就不给你过',
 })
 /** 认证对话框的显隐 */
 const authDialogVisible = ref<boolean>(false)
