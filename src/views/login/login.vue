@@ -124,8 +124,13 @@ const submitForm = (formEl: FormInstance | undefined) => {
       }).then((res) => {
         storeUserInfo(res.data.token);
         Message.success("登录成功");
-        router.push("/");
-        userInfoRequest({ token: res.data.token });
+        userInfoRequest({ token: res.data.token }).then((res) => {
+          res.data.userVo.role
+            ? res.data.userVo.role == "ADMIN"
+              ? router.push("/adminMain")
+              : router.push("/userMain")
+            : "";
+        });
       });
     } else {
       Message.error("登录失败");
